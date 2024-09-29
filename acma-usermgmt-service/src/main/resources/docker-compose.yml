@@ -1,0 +1,83 @@
+# Specifies the Docker Compose file format version
+#version: '3.8'
+
+services:
+  # MySQL database service
+  acma-iam-config-service:
+    # Container name for easy identification
+    container_name: acma-workforce-db
+    # Image to use (latest tag means the most recent version)
+    image: mysql:latest
+    # Restart policy if the container exits unexpectedly
+    restart: on-failure
+    # Port mapping: expose port 3308 on the host
+    ports:
+      - 3310:3306
+    # Environment variables for MySQL configuration
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=acma-workforce
+    # Network the container belongs to
+    networks:
+      - acma-iam-network
+    volumes:
+      - D:/ACMA Project/ACMA/docker/acma-workforce-db:/var/lib/mysql
+
+  # LDAP service
+  acma-iam-fed-service:
+    # Container name for easy identification
+    container_name: acma-customer-ldap
+    # Image to use (latest tag means the most recent version)
+    image: openidentityplatform/opendj:latest
+    # Restart policy if the container exits unexpectedly
+    restart: on-failure
+    # Port mappings for LDAP server
+    ports:
+      - 1389:1389
+      - 1636:1636
+      - 4444:4444
+    # Environment variables for LDAP configuration
+    environment:
+      - BASE_DN=dc=acma,dc=com
+      - ROOT_USER_DN=uid=acmaAdmin
+      - ROOT_PASSWORD=Adance123$$
+    # Network the container belongs to
+    networks:
+      - acma-iam-network
+    volumes:
+      - D:/ACMA Project/ACMA/docker/acma-customer-db:/opt/opendj/data
+ 
+  # Keycloak service
+  acma-iam-service:
+    # Container name for easy identification
+    container_name: acma-iam
+    # Image to use (latest tag means the most recent version)
+    image: quay.io/keycloak/keycloak:latest
+    # Command to run when starting the container
+    command: start-dev
+    # Restart policy if the container exits unexpectedly
+    restart: always
+    # Port mapping: expose port 8081 on the host
+    ports:
+      - 8081:8080
+    # Environment variables for Keycloak configuration
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=Admin123$$
+      - KC_DB=mysql
+      - KC_DB_URL=jdbc:mysql://acma-iam-config-service/acma-workforce
+      - KC_DB_USERNAME=root
+      - KC_DB_PASSWORD=admin
+      - KC_HEALTH_ENABLED=true
+    # Network the container belongs to
+    networks:
+      - acma-iam-network
+    # Services this container depends on
+    depends_on:
+      - acma-iam-config-service
+      - acma-iam-fed-service
+
+# Network configuration
+networks:
+  acma-iam-network:
+    driver: bridge
