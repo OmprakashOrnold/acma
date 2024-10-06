@@ -1,7 +1,9 @@
 package com.acma.properties.beans;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -12,6 +14,8 @@ import java.io.Serializable;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserBean implements Serializable {
 
     private static final long serialVersionUID = 526485415768575666L;
