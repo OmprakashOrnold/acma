@@ -1,11 +1,11 @@
 package com.acma.properties.outbound;
 
 import com.acma.properties.models.Users;
-import com.acma.properties.models.UsersResponse;
 import com.acma.properties.utility.APIUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -50,7 +50,7 @@ public class AcmaUserOutBoundAPI {
         log.info("Fetching all users using API: {}", usersApiUrl);
         try {
             HttpEntity<String> entity = new HttpEntity<>(APIUtils.buildHeaders(accessToken));
-            ResponseEntity<?> responseEntity = restTemplate.exchange(usersApiUrl, HttpMethod.GET, entity, Object.class);
+            ResponseEntity<?> responseEntity = restTemplate.exchange(usersApiUrl, HttpMethod.GET, entity,  new ParameterizedTypeReference<List<Users>>() {});
             return processUsersList(responseEntity);
         } catch (Exception e) {
             log.error("Error occurred while fetching users", e);
@@ -70,7 +70,7 @@ public class AcmaUserOutBoundAPI {
         log.info("Fetching users for group ID {} using API: {}", groupId, apiEndpoint);
         try {
             HttpEntity<String> entity = new HttpEntity<>(APIUtils.buildHeaders(accessToken));
-            ResponseEntity<?> responseEntity = restTemplate.exchange(apiEndpoint, HttpMethod.GET, entity, Object.class);
+            ResponseEntity<?> responseEntity = restTemplate.exchange(apiEndpoint, HttpMethod.GET, entity,  new ParameterizedTypeReference<List<Users>>() {});
             return processUsersList(responseEntity);
         } catch (Exception e) {
             log.error("Error occurred while fetching users for group ID {}", groupId, e);
