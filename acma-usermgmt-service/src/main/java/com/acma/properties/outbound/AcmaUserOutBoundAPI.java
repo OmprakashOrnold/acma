@@ -70,7 +70,7 @@ public class AcmaUserOutBoundAPI {
         log.info("Fetching users for group ID {} using API: {}", groupId, apiEndpoint);
         try {
             HttpEntity<String> entity = new HttpEntity<>(APIUtils.buildHeaders(accessToken));
-            ResponseEntity<?> responseEntity = restTemplate.exchange(apiEndpoint, HttpMethod.GET, entity, Object.class);
+            ResponseEntity<?> responseEntity = restTemplate.exchange(apiEndpoint, HttpMethod.GET, entity,  new ParameterizedTypeReference<List<Users>>() {});
             return processUsersList(responseEntity);
         } catch (Exception e) {
             log.error("Error occurred while fetching users for group ID {}", groupId, e);

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserService {
 
-    UserBean createUser(UserBean userBeanm,String accessToken);
+    UserBean createUser(UserBean userBean,String accessToken);
     Boolean deleteUser(String userId,String accessToken);
     UserBean getUserById(String userId,String accessToken);
     List<UserBean> getAllUsers(String accessToken);

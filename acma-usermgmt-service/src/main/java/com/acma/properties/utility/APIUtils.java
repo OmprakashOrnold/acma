@@ -1,10 +1,12 @@
 package com.acma.properties.utility;
 
 import com.acma.properties.models.Users;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 
 public class APIUtils {
 
@@ -38,5 +40,13 @@ public class APIUtils {
         headers.add(AUTHORIZATION_HEADER, BEARER_TOKEN_PREFIX + accessToken);
         headers.add(CONTENT_TYPE_HEADER, APPLICATION_JSON);
         return headers;
+    }
+
+    public static String getBearerToken(HttpServletRequest httpServletRequest) {
+        String bearerToken =httpServletRequest.getHeader( AUTHORIZATION_HEADER );
+        if(StringUtils.hasText( bearerToken ) && bearerToken.startsWith( BEARER_TOKEN_PREFIX )) {
+            bearerToken = bearerToken.substring( BEARER_TOKEN_PREFIX.length() );
+        }
+        return bearerToken;
     }
 }
