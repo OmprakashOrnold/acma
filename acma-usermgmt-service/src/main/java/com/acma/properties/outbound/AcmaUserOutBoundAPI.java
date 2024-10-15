@@ -184,14 +184,14 @@ public class AcmaUserOutBoundAPI {
         log.info("Retrieving user using API: {}", apiEndpoint);
         try {
             HttpEntity<String> entity = new HttpEntity<>(APIUtils.buildHeaders(accessToken));
-            ResponseEntity<?> responseEntity = restTemplate.exchange(apiEndpoint, HttpMethod.GET, entity, ResponseEntity.class);
+            ResponseEntity<Users> responseEntity = restTemplate.exchange(apiEndpoint, HttpMethod.GET, entity, Users.class);
 
             int statusCode = responseEntity.getStatusCode().value();
             log.info("Received status code: {}", statusCode);
 
             if (responseEntity.getBody() != null && !responseEntity.getBody().toString().isEmpty()) {
-                Users user = (Users) responseEntity.getBody();
-                log.info("Successfully retrieved user: {}", user.getUserId());
+                Users user = responseEntity.getBody();
+                log.info("Successfully retrieved user: {}", userId);
                 return user;
             } else {
                 log.warn("No user found for ID: {}", userId);
