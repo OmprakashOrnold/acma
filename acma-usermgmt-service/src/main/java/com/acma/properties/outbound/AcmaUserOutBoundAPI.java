@@ -229,7 +229,7 @@ public class AcmaUserOutBoundAPI {
             if (!provisionUserUnderAGroup(groupId, userId, accessToken)) {
                 throw new ProvisioningFailureException("Failed to provision user", groupId, userId);
             }
-            user.setUserId(userId);
+            user.setId(userId);
             user.setGroupId(groupId);
             return user;
         } else {

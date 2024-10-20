@@ -30,4 +30,5 @@ public class UserBean implements Serializable {
     private boolean totp = false;
     @Builder.Default
     private boolean emailVerified = false;
+    private String id;
 }
