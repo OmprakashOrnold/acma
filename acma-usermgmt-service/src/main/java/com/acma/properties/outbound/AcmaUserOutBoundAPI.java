@@ -1,5 +1,8 @@
 package com.acma.properties.outbound;
 
+import com.acma.properties.exceptions.ProvisioningFailureException;
+import com.acma.properties.exceptions.UserCreationException;
+import com.acma.properties.exceptions.UserNotFoundException;
 import com.acma.properties.models.Users;
 import com.acma.properties.utility.APIUtils;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +57,7 @@ public class AcmaUserOutBoundAPI {
             return processUsersList(responseEntity);
         } catch (Exception e) {
             log.error("Error occurred while fetching users", e);
-            throw new RuntimeException("Error occurred while fetching users", e);
+            throw new UserNotFoundException("Failed to fetch users");
         }
     }
 
@@ -211,28 +214,28 @@ public class AcmaUserOutBoundAPI {
             return usersList;
         } else {
             log.error("Failed to fetch users. Status code: {}", responseEntity.getStatusCode().value());
-            throw new RuntimeException("Failed to fetch users. HTTP status: " + responseEntity.getStatusCode().value());
+            throw new UserNotFoundException("Failed to fetch users. HTTP status: " + responseEntity.getStatusCode().value());
         }
     }
 
-    private Users handleUserCreation(Users user, ResponseEntity<?> responseEntity, String accessToken) {
+
+    private Users handleUserCreation(Users user, ResponseEntity<?> responseEntity, String accessToken) throws ProvisioningFailureException {
         HttpHeaders headers = responseEntity.getHeaders();
         Optional<String> location = Optional.ofNullable(headers.getFirst("Location"));
         if (location.isPresent()) {
             String userId = location.get().replace(usersApiUrl, "");
             log.info("User created successfully. User ID: {}, Location: {}", userId, location.get());
-            String groupId = StringUtils.hasLength(user.getGroupId()) ? user.getGroupId() : propertyOwnersGroupId;
-            if (provisionUserUnderAGroup(groupId, userId, accessToken)) {
-                user.setGroupId(groupId);
-                user.setUserId(userId);
-                return user;
-            }else {
-                //delete user if provisioning fails
+            String groupId = StringUtils.hasLength(user.getGroupId())? user.getGroupId() : propertyOwnersGroupId;
+            if (!provisionUserUnderAGroup(groupId, userId, accessToken)) {
+                throw new ProvisioningFailureException("Failed to provision user", groupId, userId);
             }
+            user.setUserId(userId);
+            user.setGroupId(groupId);
+            return user;
         } else {
             log.warn("No Location header found in response");
+            throw new UserCreationException("Failed to create user");
         }
-        return user;
     }
 
 }
