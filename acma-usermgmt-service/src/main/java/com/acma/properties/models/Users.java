@@ -34,8 +34,7 @@ public class Users implements Serializable {
     private boolean emailVerified = false;
     @JsonIgnore
     private String groupId;
-    @JsonIgnore
-    private String userId;
+    private String id;
     private List<String> realmRoles ;
     private UserAccess access;
 
