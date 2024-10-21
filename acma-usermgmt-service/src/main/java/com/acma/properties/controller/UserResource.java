@@ -5,6 +5,7 @@ import com.acma.properties.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -103,7 +104,7 @@ public class UserResource {
 
     @PostMapping("/")
     @Operation(description = "Creating User", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<UserBean> createUser(UserBean userBean) {
+    public ResponseEntity<UserBean> createUser(@Valid @RequestBody UserBean userBean) {
         log.info("Creating user with access token: {} and userBean: {}, ", getBearerToken(this.httpServletRequest), userBean);
         UserBean createdUser = userService.createUser(userBean, getBearerToken(this.httpServletRequest));
 
