@@ -1,6 +1,7 @@
 spring:
   application:
     name: acma-usermgmt-service
+    version: 1.0.0
 server:
   port: ${SERVER_PORT:5051}
 
