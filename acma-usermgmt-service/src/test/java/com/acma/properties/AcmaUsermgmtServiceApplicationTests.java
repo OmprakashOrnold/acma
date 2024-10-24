@@ -55,7 +55,7 @@ class AcmaUsermgmtServiceApplicationTests {
         newUser = usersAPI.createUser( newUser, accessToken );
         assertThat( newUser );
         assertThat( newUser.getGroupId() );
-        assertThat( newUser.getUserId() );
+        assertThat( newUser.getId() );
     }
 
     @Test
@@ -69,7 +69,7 @@ class AcmaUsermgmtServiceApplicationTests {
         newUser = usersAPI.createUser( newUser, accessToken );
         assertThat( newUser );
         assertThat( newUser.getGroupId() );
-        assertThat( newUser.getUserId() );
+        assertThat( newUser.getId() );
     }
 
     @Test
@@ -83,7 +83,7 @@ class AcmaUsermgmtServiceApplicationTests {
         newUser = usersAPI.createUser( newUser, accessToken );
         assertThat( newUser );
         assertThat( newUser.getGroupId() );
-        assertThat( newUser.getUserId() );
+        assertThat( newUser.getId() );
     }
 
     @Test
