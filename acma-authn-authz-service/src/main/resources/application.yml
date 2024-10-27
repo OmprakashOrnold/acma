@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: acma-authn-authz-service
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: ott-insurer
+            client-secret: vIfmtfpOF7ayb3g2m6rrL9Rp7G6iuWsE
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/"
+            scope:
+             - openid
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8081/realms/acma
+            token-uri: http://localhost:8081/realms/acma/protocol/openid-connect/token
+
+server:
+  port: ${APP_PORT:5052}
+
+
+
+
