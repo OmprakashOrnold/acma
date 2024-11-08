@@ -77,6 +77,30 @@ services:
       - acma-iam-config-service
       - acma-iam-fed-service
 
+
+  acma-cache-service:
+    image: redis/redis-stack:latest
+    restart: on-failure
+    environment:
+      REDIS_ARGS: "--requirepass password --user username on >password ~* allcommands --user default off nopass nocommands"
+    ports:
+      - 6379:6379
+      - 8001:8001
+
+    networks:
+      - acma-iam-network
+
+
+  acma-cache-client-service:
+    container_name: acma-cache-client
+    image: redis/redisinsight:latest
+    restart: on-failure
+    ports:
+      - 5053:5540
+    networks:
+      - acma-iam-network
+
+
 # Network configuration
 networks:
   acma-iam-network:
