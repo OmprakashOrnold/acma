@@ -5,6 +5,14 @@ spring:
 server:
   port: ${SERVER_PORT:5051}
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${ACMA_REGISTRY_HOST:localhost}:${ACMA_REGISTRY_PORT:8761}/eureka/
+  instance:
+    #prefer-ip-address: true
+    hostname: ${ACMA_USERMGMT_REGISTRY_HOST:localhost}
+
 acma:
   iam:
     usersApi: ${PROTOCOL:http}://${IAM_USERS_API_HOST:am.acma.com}:${IAM_USERS_API_PORT:8081}/admin/realms/${IAM_REALM:acma}/users/
@@ -13,3 +21,9 @@ acma:
       property-owners: ${PROP_OWNERS_GROUP_ID:d8246eb5-4361-4ef4-9a8b-733cff85ac34}
       brokers: ${BROKERS_GROUP_ID:54be4bfb-ef71-4df5-b61d-4de6756dc4f0}
       agents: ${AGENTS_GROUP_ID:52cbf801-4214-47cb-a747-b2c3eca8e740}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
