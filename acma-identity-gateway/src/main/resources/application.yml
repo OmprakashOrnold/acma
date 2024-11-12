@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: acma-identity-gateway
+    version: 1.0.0
+
+server:
+  port: 6060
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${ACMA_REGISTRY_HOST:localhost}:${ACMA_REGISTRY_PORT:8761}/eureka/
+    fetch-registry: true
+  instance:
+    #prefer-ip-address: true
+    hostname: ${ACMA_GATEWAY_REGISTRY_HOST:localhost}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true

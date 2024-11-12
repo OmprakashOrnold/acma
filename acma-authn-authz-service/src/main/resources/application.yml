@@ -1,6 +1,8 @@
 spring:
   application:
     name: acma-authn-authz-service
+    version: 1.0.0
+
   data:
     redis:
       host: ${ACMA_CACHE_HOST:localhost}
