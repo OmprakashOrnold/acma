@@ -1,26 +1,68 @@
+
 spring:
   application:
     name: acma-identity-gateway
-    version: 1.0.0
+
+  cloud:
+    gateway:
+      enabled: true
+      filter:
+        local-response-cache:
+          enabled: true
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        # User Mgmnt API Routes
+        #        - id: 01-usermgmt-api-routes
+        #          predicates:
+        #            - Path=/acma/users/**
+        #          uri: lb://ACMA-USERMGMT-SERVICE
+        #          filters:
+        #           - RewritePath=/acma/users/?(?<segment>.*),/users/$\{segment}
+        #           - AddRequestHeader=userType,owner
+
+        # User Mgmt document Routes
+        - id: 01a-usermgmt-document-routes
+          predicates:
+            - Path=/swagger-ui.html
+          uri: lb://ACMA-USERMGMT-SERVICE
+
+        - id: 01b-usermgmt-document-routes
+          predicates:
+            - Path=/swagger-ui/**
+          uri: lb://ACMA-USERMGMT-SERVICE
+
+        - id: 01c-usermgmt-document-routes
+          predicates:
+            - Path=/v3/**
+          uri: lb://ACMA-USERMGMT-SERVICE
+
+        # ACMA Authnz Service Routes
+        - id: 02-authz-token-routes
+          predicates:
+            - Path=/token
+          uri: lb://ACMA-AUTHN-AUTHZ-SERVICE
+
 
 server:
   port: 6060
-
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://${ACMA_REGISTRY_HOST:localhost}:${ACMA_REGISTRY_PORT:8761}/eureka/
-    fetch-registry: true
-  instance:
-    #prefer-ip-address: true
-    hostname: ${ACMA_GATEWAY_REGISTRY_HOST:localhost}
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+
   endpoint:
     gateway:
       enabled: true
+
+eureka:
+  client:
+    service-url:
+      default-zone: http://${ACMA_REGISTRY_HOST:localhost}:${ACMA_REGISTRY_PORT:8761}/eureka/
+    fetch-registry: true
+  instance:
+    #prefer-ip-address:  true
+    hostname: ${ACMA_REGISTRY_HOST:localhost}
